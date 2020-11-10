@@ -11,6 +11,10 @@ import random
 from PySide2 import QtCore, QtWidgets, QtGui
 from crossref.restful import Works
 
+from selenium import webdriver
+from bs4 import BeautifulSoup
+# import pandas as pd
+
 # class MyWidget(QtWidgets.QWidget):
 #     def __init__(self):
 #         super().__init__()
@@ -41,25 +45,44 @@ def get_info(path):
 		# print(info)
 		return info
 
-works = Works()
+driver = webdriver.Firefox()
+products=[] #List to store name of the product
+prices=[] #List to store price of the product
+ratings=[] #List to store rating of the product
+driver.get("https://scholar.google.co.in/scholar?hl=en&as_sdt=0%2C5&q=submodular+functions&btnG=")
+content = driver.page_source
+# print(content)
+soup = BeautifulSoup(content)
+# print(soup.gs_a)
+# print(soup)
+# print(soup.findAll('div'))
+for a in soup.findAll('div', attrs={'class': 'gs_a'}):
+	print(a.text)
 
-title = 'maximizing non-monotone submodular functions'
+for a in soup.findAll('h3', attrs={'class': 'gs_rt'}):
+	print(a.text)
 
-# search_query = scholarly.search_pubs_query(title)
-# search_result = next(search_query)
-# print(search_result)
-# doi = search_result.doi
+# print(products)
 
-# title = get_info('2.pdf').get('/Title')
-# print(title)
-# w1 = works.doi('10.1137/090779346')
-# print(w1)
+# works = Works()
 
-q = works.query(bibliographic=title).sort('relevance')
-if q.count != 0:
-    for item in q:
-        print(item['title'])
-        break
+# title = 'maximizing non-monotone submodular functions'
+
+# # search_query = scholarly.search_pubs_query(title)
+# # search_result = next(search_query)
+# # print(search_result)
+# # doi = search_result.doi
+
+# # title = get_info('2.pdf').get('/Title')
+# # print(title)
+# # w1 = works.doi('10.1137/090779346')
+# # print(w1)
+
+# q = works.query(bibliographic=title).sort('relevance')
+# if q.count != 0:
+#     for item in q:
+#         print(item['title'])
+#         break
 
 
     # print(w1.count())
