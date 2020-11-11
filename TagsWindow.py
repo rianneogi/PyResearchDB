@@ -39,7 +39,7 @@ class TagsTab(QWidget):
 		self.selected_tag_index = -1
 		self.tags_table = QTableWidget()
 		self.tags_table.setColumnCount(2)
-		self.tags_table.setHorizontalHeaderLabels(['Tag', 'Publication count'])
+		self.tags_table.setHorizontalHeaderLabels(['Tag', 'Count'])
 		self.tags_table.horizontalHeader().setSectionsMovable(True)
 		self.tags_table.setColumnWidth(0, 200)
 		self.tags_table.setColumnWidth(1, 100)

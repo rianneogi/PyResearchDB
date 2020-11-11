@@ -18,27 +18,11 @@ import time
 import requests
 import subprocess
 
-###TODO replace scholarly with crossref api
-
 gPapers = []
-# gAuthors = []
 gTags = []
 gWorks = Works()
 gJSONfilename = 'papers.json'
 gDefaultDownloadPath = '/home/rian/Documents/Research Papers/TCS/'
-
-# CHROME_PATH = '/usr/bin/google-chrome'
-# CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
-# WINDOW_SIZE = "1920,1080"
-
-# g_chrome_options = ChromeOptions()
-# g_chrome_options.add_argument("--headless")
-# g_chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
-# g_chrome_options.binary_location = CHROME_PATH
-
-# gDriver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, g_chrome_options=chrome_options)
-
-# gDriver = webdriver.Firefox()
 
 def load_tags():
 	with open('tags.json', encoding='utf-8') as f:
@@ -96,14 +80,11 @@ def query_semantic_scholar(title):
 	title = title.replace(':', '')
 	title = title.replace(';', '')
 	title = title.replace('/', '%2F')
-	# print(title)
 
 	options = FirefoxOptions()
 	options.add_argument('--headless')
 	driver = webdriver.Firefox(options=options)
-	# driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=g_chrome_options)
 	driver.get('https://www.semanticscholar.org/search?q=' + title + '&sort=relevance')
-	# element = WebDriverWait(gDriver, 10).until(EC.presence_of_element_located((By.ID, "main-content")))
 	content = driver.page_source
 	soup = BeautifulSoup(content, features="lxml")
 	for link in soup.find_all('a'):
@@ -134,17 +115,12 @@ def query_semantic_scholar_by_id(paper_id):
 	paper = semanticscholar.paper(paper_id, timeout=10)
 	print(paper.keys())
 
-	# if len(paper.keys() == 0):
-		# print("Failed to get paper:", paper_id)
-
 	print(paper['title'])
-	# print(paper['abstract'])
 	for author in paper['authors']:
 		print(author['name'])
-		# print(author['authorId'])
 	return paper
 
-def force_index_file(path, index, title):
+def force_index_file(path, index, title): #uses crossref; deprecated
 	print('force index', path, index, title)
 
 	if title=="":
@@ -308,7 +284,6 @@ def reindex_file_by_corpus_id(path, corpus_id):
 	json = query_semantic_scholar_by_id('CorpusID:'+corpus_id)
 	json['path'] = path
 	json['tags'] = []
-	# gPapers.append(json)
 
 	found = False
 	for i in range(len(gPapers)):
@@ -320,7 +295,7 @@ def reindex_file_by_corpus_id(path, corpus_id):
 		gPapers.append(json)
 
 	if json['title'] == 'Unindexed document':
-		n = notify2.Notification("Unable to find publication", title, "package-broken")
+		n = notify2.Notification("Unable to find publication", path, "package-broken")
 		n.show()
 	else:
 		n = notify2.Notification("Document Parsed", json['title'], "package-install")
@@ -343,19 +318,19 @@ def index_file_with_semantic_scholar(path, title):
 		n.show()
 		
 
-def index_with_semantic_scholar(path):
-	with open('papers_ss.json') as f:
-		global gPapers
-		gPapers = json.load(f)
+# def index_with_semantic_scholar(path):
+# 	with open('papers_ss.json') as f:
+# 		global gPapers
+# 		gPapers = json.load(f)
 
-	for f in os.listdir(path):
-		if f.endswith('.pdf'):
-			index_file_with_semantic_scholar(path + f, f)
-			time.sleep(5)
-			save_json(gJSONfilename)
+# 	for f in os.listdir(path):
+# 		if f.endswith('.pdf'):
+# 			index_file_with_semantic_scholar(path + f, f)
+# 			time.sleep(5)
+# 			save_json(gJSONfilename)
 	
-	with open('papers_ss.json', 'w', encoding='utf-8') as f:
-		json.dump(gPapers, f, ensure_ascii=False, indent=4)
+# 	with open('papers_ss.json', 'w', encoding='utf-8') as f:
+# 		json.dump(gPapers, f, ensure_ascii=False, indent=4)
 
 def add_paper_by_corpus_id(corpus_id):
 	print('adding paper by corpus id', corpus_id)
