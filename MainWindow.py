@@ -16,6 +16,7 @@ from PySide2.QtWidgets import (QWidget,QTabWidget,QVBoxLayout,QApplication)
 # from PySide2 import *
 from PapersWindow import *
 from AuthorsWindow import *
+from TagsWindow import *
 import Index
 
 class MainWindow(QWidget):
@@ -26,8 +27,10 @@ class MainWindow(QWidget):
         self.tabs = QTabWidget()
         self.papersTab = PapersTab()
         self.authorsTab = AuthorsTab()
+        self.tagsTab = TagsTab()
         self.tabs.addTab(self.papersTab, "Papers")
         self.tabs.addTab(self.authorsTab, "Authors")
+        self.tabs.addTab(self.tagsTab, "Tags")
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.tabs)
 
@@ -41,6 +44,7 @@ if __name__ == "__main__":
     Index.load_json(Index.gJSONfilename)
     # print(Index.gPapers)
     notify2.init("PdfDB")
+    Index.load_tags()
 
     app = QApplication([])
 

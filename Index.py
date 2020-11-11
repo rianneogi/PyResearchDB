@@ -21,7 +21,7 @@ import subprocess
 ###TODO replace scholarly with crossref api
 
 gPapers = []
-gAuthors = []
+# gAuthors = []
 gTags = []
 gWorks = Works()
 gJSONfilename = 'papers.json'
@@ -39,6 +39,14 @@ gDefaultDownloadPath = '/home/rian/Documents/Research Papers/TCS/'
 # gDriver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, g_chrome_options=chrome_options)
 
 # gDriver = webdriver.Firefox()
+
+def load_tags():
+	with open('tags.json', encoding='utf-8') as f:
+		print('loading tags')
+		global gTags
+		gTags = json.load(f)
+
+	print(gTags)
 
 def load_json(filename):
 	print('Loading json')
