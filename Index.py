@@ -42,7 +42,7 @@ gDefaultDownloadPath = '/home/rian/Documents/Research Papers/TCS/'
 
 def load_json(filename):
 	print('Loading json')
-	with open(filename) as f:
+	with open(filename, encoding='utf-8') as f:
 		global gPapers
 		gPapers = json.load(f)
 		# print(gPapers)

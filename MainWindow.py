@@ -1,5 +1,5 @@
 import PyPDF2 as pdf
-import textract
+# import textract
 import scholarly
 # import refextract
 import pdftitle
