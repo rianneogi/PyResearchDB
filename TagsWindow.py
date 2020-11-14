@@ -1,6 +1,7 @@
-from PySide2.QtCore import Qt,Slot,QModelIndex
-from PySide2.QtGui import (QImage,QPixmap)
-from PySide2.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
+from PyQt5.QtCore import Qt,QModelIndex
+from PyQt5.QtGui import (QImage,QPixmap)
+from PyQt5.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
+from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
 # from PySide2.QtCharts import *
 # from PySide2 import *
 import json
@@ -20,11 +21,9 @@ class TagsTab(QWidget):
 	def __init__(self):
 		QWidget.__init__(self)
 
-		# tags_metadata = tags_list.copy()
 		self.tags_dict = {}
 		for tag in Index.gTags:
 			self.tags_dict[tag] = {}
-			# self.tags_dict[tag]['name'] = tag
 			self.tags_dict[tag]['papers'] = []
 
 		for paper in Index.gPapers:
@@ -89,7 +88,6 @@ class TagsTab(QWidget):
 		self.tags_table.selectionModel().currentRowChanged.connect(self.tags_row_changed)
 		self.pubs_table.cellClicked.connect(self.pubs_cell_double_click)
 
-		# self.sort_by_first_name.clicked.connect(self.sort_by_first_name_click)
 		self.sort_by_tag_name.clicked.connect(self.sort_by_tag_click)
 		self.sort_by_num_pubs.clicked.connect(self.sort_by_pubs_click)
 

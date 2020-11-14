@@ -13,6 +13,12 @@ from crossref.restful import Works
 
 from selenium import webdriver
 from bs4 import BeautifulSoup
+
+import pdfreader
+import PIL
+
+import pdflatex
+
 # import pandas as pd
 
 # class MyWidget(QtWidgets.QWidget):
@@ -45,22 +51,55 @@ def get_info(path):
 		# print(info)
 		return info
 
-driver = webdriver.Firefox()
-products=[] #List to store name of the product
-prices=[] #List to store price of the product
-ratings=[] #List to store rating of the product
-driver.get("https://scholar.google.co.in/scholar?hl=en&as_sdt=0%2C5&q=submodular+functions&btnG=")
-content = driver.page_source
-# print(content)
-soup = BeautifulSoup(content)
-# print(soup.gs_a)
-# print(soup)
-# print(soup.findAll('div'))
-for a in soup.findAll('div', attrs={'class': 'gs_a'}):
-	print(a.text)
+from pdfreader import SimplePDFViewer, PageDoesNotExist
 
-for a in soup.findAll('h3', attrs={'class': 'gs_rt'}):
-	print(a.text)
+fd = open('3.pdf', "rb")
+viewer = SimplePDFViewer(fd)
+
+plain_text = ""
+pdf_markdown = ""
+images = []
+try:
+    while True:
+        viewer.render()
+        pdf_markdown += viewer.canvas.text_content
+        plain_text += "".join(viewer.canvas.strings)
+        images.extend(viewer.canvas.inline_images)
+        images.extend(viewer.canvas.images.values())
+        viewer.next()
+except PageDoesNotExist:
+    pass
+
+# pimg = PIL.Image()
+
+print(plain_text)
+print(pdf_markdown)
+for img in images:
+	pimg = img.to_Pillow()
+	# pimg = PIL.Image()
+	print(pimg.size)
+	pimg.show()
+	break
+
+
+
+
+# driver = webdriver.Firefox()
+# products=[] #List to store name of the product
+# prices=[] #List to store price of the product
+# ratings=[] #List to store rating of the product
+# driver.get("https://scholar.google.co.in/scholar?hl=en&as_sdt=0%2C5&q=submodular+functions&btnG=")
+# content = driver.page_source
+# # print(content)
+# soup = BeautifulSoup(content)
+# # print(soup.gs_a)
+# # print(soup)
+# # print(soup.findAll('div'))
+# for a in soup.findAll('div', attrs={'class': 'gs_a'}):
+# 	print(a.text)
+
+# for a in soup.findAll('h3', attrs={'class': 'gs_rt'}):
+# 	print(a.text)
 
 # print(products)
 
@@ -99,7 +138,7 @@ for a in soup.findAll('h3', attrs={'class': 'gs_rt'}):
 #     sys.exit(app.exec_())
 
 # get_info('2.pdf')
-# text = textract.process('1.pdf', method='pdftotext')
+# text = textract.process('2.pdf', method='pdftotext', layout=True)
 # print(text)
 
 # notify2.init("PdfDB")

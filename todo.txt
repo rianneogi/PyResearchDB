@@ -1,0 +1,31 @@
+PDF Viewer (either python or maybe C++ if speed is an issue)
+  - Dark Mode, and other color schemes - use poppler to render to image and then modify pixels of image
+  - Citation/Lemma Peek - We have the link data, create window that renders the link destination
+  - Some UI to show abstract for referenced papers - abstract of papers is given by api
+  - Clicking on reference will open that pdf - use text-extraction and check text matches the reference given by api
+  - Bookmarks
+  - Every other common feature
+    - Table of Contents - given by poppler
+    - Comments - vivek has done this
+    - Text Search - text extraction
+    - Page Navigation
+    - Text Highlight 
+    
+  - (*) Proof hiding
+
+  
+Web-Scraping/PDF Management (Coded in python (for the libraries))
+  - Tag System
+  - Search online for publications - web scraping and semantic scholar api - most is already implemented
+  - Button to download publication to local disk
+  - Search all publications in local disk
+  - Search Authors (and sort their publications by recency/citation count) - semantic scholar api
+  - List of papers that cite currently opened pdf - semantic scholar api
+  
+  - Flag documents
+  
+  
+UI (in javascript) - by Vivek
+  - Communicate errors to the user
+
+

@@ -1,4 +1,4 @@
-import PyPDF2 as pdf
+# import PyPDF2 as pdf
 # import textract
 import scholarly
 # import refextract
@@ -10,13 +10,15 @@ import sys
 import random
 # import popplerqt5
 import subprocess
-from PySide2.QtCore import Qt,Slot,QModelIndex
-from PySide2.QtGui import (QImage,QPixmap)
-from PySide2.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
+from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
+from PyQt5.QtCore import Qt,QModelIndex,QByteArray
+from PyQt5.QtGui import (QImage,QPixmap)
+from PyQt5.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
 # from PySide2.QtCharts import *
 # from PySide2 import *
 
 import Index
+import poppler
 
 
 def getAuthorName(a):
@@ -123,11 +125,19 @@ class PapersTab(QWidget):
 		self.paper_abstract.setFixedWidth(right_width)
 		self.paper_abstract.setWordWrap(True)
 
+		self.pdf_image = QLabel()
+		self.pixmap = QPixmap()
+		self.pdf_image.setPixmap(self.pixmap)
+		self.pdf_image.show()
+		self.bytearray = QByteArray()
+		self.qimage = QImage()
+
 		self.right = QVBoxLayout()
 		self.right.addLayout(self.sorting)
 		self.right.addWidget(self.paper_title)
 		self.right.addWidget(self.paper_authors)
 		self.right.addWidget(self.paper_tags)
+		self.right.addWidget(self.pdf_image)
 		self.right.addWidget(self.paper_filename)
 		self.right.addWidget(self.paper_abstract)
 
@@ -250,6 +260,21 @@ class PapersTab(QWidget):
 			self.paper_abstract.setText(self.PapersView[row]['abstract'])
 		else:
 			self.paper_authors.setText('')
+
+		self.pdf = poppler.load_from_file(self.PapersView[row]['path'])
+		self.page = self.pdf.create_page(0)
+		self.renderer = poppler.PageRenderer()
+		self.image = self.renderer.render_page(self.page)
+		# print(image.data)
+		# print(image.memoryview().tolist())
+
+		print(type(self.image.data))
+		self.bytearray.fromRawData(self.image.data)
+		# self.qimage = QImage()
+		self.qimage.loadFromData(self.bytearray)
+		self.pixmap.fromImage(self.qimage)
+		self.pdf_image.setPixmap(self.pixmap)
+		self.pdf_image.show()
 
 		print('set selected_paper_index', row)
 

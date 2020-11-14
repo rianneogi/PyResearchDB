@@ -1,6 +1,8 @@
-from PySide2.QtCore import Qt,Slot
-from PySide2.QtGui import (QImage,QPixmap)
-from PySide2.QtWidgets import (QHeaderView,QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import (QImage,QPixmap)
+from PyQt5.QtWidgets import (QHeaderView,QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
+from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
+
 import subprocess
 
 import Index
