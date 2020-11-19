@@ -29,45 +29,48 @@ class TagsCheckboxWindow(QWidget):
 				if tag in self.paper['tags']:
 					checkbox.setChecked(True)
 
-			checkbox.clicked.connect(lambda: self.checkbox_click(checkbox))
+			checkbox.clicked.connect(self.checkbox_click_creator(checkbox))
 
 		self.setLayout(self.layout)
 
-	@Slot()
-	def checkbox_click(self, box):
-		if box.isChecked() == True:
-			print('checkbox for', self.path, 'is true')
-			if 'tags' not in self.paper:
-				self.paper['tags'] = []
-			if box.text() not in self.paper['tags']:
-				self.paper['tags'].append(box.text())
-				Index.save_json(Index.gJSONfilename)
-			# for paper in Index.gPapers:
-			# 	if paper['path'] == self.path:
-			# 		if 'tags' not in paper:
-			# 			paper['tags'] = []
-					
-			# 		if box.text() not in paper['tags']:
-			# 			paper['tags'].append(box.text())
-			# 			Index.save_json(Index.gJSONfilename)
-
-			# 		break
-
-		else:
-			print('checkbox', box.text(), 'for', self.path, 'is false')
-			if 'tags' not in self.paper:
-				self.paper['tags'] = []
-			if box.text() in self.paper['tags']:
-				self.paper['tags'].remove(box.text())
-				Index.save_json(Index.gJSONfilename)
-			# for paper in Index.gPapers:
-			# 	if paper['path'] == self.path:
-			# 		if 'tags' not in paper:
-			# 			paper['tags'] = []
-					
-			# 		if box.text() in paper['tags']:
-			# 			paper['tags'].remove(box.text())
-			# 			Index.save_json(Index.gJSONfilename)
+	def checkbox_click_creator(self, box):
+		@Slot()
+		def checkbox_click():
+			if box.isChecked() == True:
+				print('checkbox for', self.path, 'is true')
+				if 'tags' not in self.paper:
+					self.paper['tags'] = []
+				if box.text() not in self.paper['tags']:
+					self.paper['tags'].append(box.text())
+					Index.save_json(Index.gJSONfilename)
+				# for paper in Index.gPapers:
+				# 	if paper['path'] == self.path:
+				# 		if 'tags' not in paper:
+				# 			paper['tags'] = []
 						
-			# 		break
+				# 		if box.text() not in paper['tags']:
+				# 			paper['tags'].append(box.text())
+				# 			Index.save_json(Index.gJSONfilename)
+
+				# 		break
+
+			else:
+				print('checkbox', box.text(), 'for', self.path, 'is false')
+				if 'tags' not in self.paper:
+					self.paper['tags'] = []
+				if box.text() in self.paper['tags']:
+					self.paper['tags'].remove(box.text())
+					Index.save_json(Index.gJSONfilename)
+				# for paper in Index.gPapers:
+				# 	if paper['path'] == self.path:
+				# 		if 'tags' not in paper:
+				# 			paper['tags'] = []
+						
+				# 		if box.text() in paper['tags']:
+				# 			paper['tags'].remove(box.text())
+				# 			Index.save_json(Index.gJSONfilename)
+							
+				# 		break
+
+		return checkbox_click
 		
