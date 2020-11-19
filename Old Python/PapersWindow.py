@@ -22,6 +22,17 @@ import Index
 import poppler
 from TagsCheckbox import TagsCheckboxWindow
 
+def getTagsString(tags):
+	s = ""
+	c = 0
+	for tag in tags:
+		s += tag
+		
+		if c != len(tags) - 1:
+			s += ", "
+		c += 1
+
+	return s
 
 def getAuthorName(a):
 	s = ""
@@ -208,7 +219,7 @@ class PapersTab(QWidget):
 				tags = paper['tags']
 			item3 = QTableWidgetItem()
 			self.table.setItem(i, 2, item3)
-			item3.setText(str(tags))
+			item3.setText(getTagsString(tags))
 			item3.setFlags(Qt.ItemIsEnabled)
 
 			date = 0
@@ -258,7 +269,10 @@ class PapersTab(QWidget):
 			self.paper_authors.setText('')
 
 		if 'tags' in self.PapersView[row]:
-			self.paper_tags.setText(str(self.PapersView[row]['tags']))
+			self.paper_tags.setText(getTagsString(self.PapersView[row]['tags']))
+		else:
+			self.paper_tags.setText('')
+			
 		self.paper_filename.setText(self.PapersView[row]['path'])
 
 		if 'abstract' in self.PapersView[row]:

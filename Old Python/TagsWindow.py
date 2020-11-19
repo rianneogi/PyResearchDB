@@ -55,7 +55,7 @@ class TagsTab(QWidget):
 		self.pubs_table.setSortingEnabled(False)
 
 		self.sort_by_tag_name = QPushButton('Sort by Tag')
-		self.sort_by_num_pubs = QPushButton('Sort by Publications')
+		self.sort_by_num_pubs = QPushButton('Sort by Count')
 		self.sort_by_title = QPushButton('Sort by Title')
 		self.sort_by_author = QPushButton('Sort by Authors')
 		self.sort_by_year = QPushButton('Sort by Year')
@@ -133,7 +133,7 @@ class TagsTab(QWidget):
 			item3 = QTableWidgetItem()
 			self.pubs_table.setItem(i, 2, item3)
 			if 'tags' in paper:
-				item3.setText(str(paper['tags']))
+				item3.setText(PapersWindow.getTagsString(paper['tags']))
 			else:
 				item3.setText('')
 			item3.setFlags(Qt.ItemIsEnabled)

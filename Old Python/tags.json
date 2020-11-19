@@ -29,5 +29,22 @@
     "Cliquewidth",
     "Graph Homomorphism",
     "Graph Sparsification",
-    "Network Flow"
+    "Network Flow",
+    "Random Matrix Theory",
+    "Steiner Tree",
+    "Randomized Algorithm",
+    "Derandomization",
+    "Set Packing",
+    "Algebraic Technique",
+    "SAT",
+    "Clique",
+    "Exact Exponential Algorithm",
+    "Subexponential Algorithm",
+    "Konig Graph",
+    "Stable Graph",
+    "Graph Theory",
+    "Graph Clustering",
+    "FPT Approximation",
+    "Modular Decomposition",
+    "LP Solving"
 ]

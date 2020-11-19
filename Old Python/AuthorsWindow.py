@@ -142,7 +142,7 @@ class AuthorsTab(QWidget):
 			item3 = QTableWidgetItem()
 			self.pubs_table.setItem(i, 2, item3)
 			if 'tags' in paper:
-				item3.setText(str(paper['tags']))
+				item3.setText(PapersWindow.getTagsString(paper['tags']))
 			else:
 				item3.setText('')
 			item3.setFlags(Qt.ItemIsEnabled)

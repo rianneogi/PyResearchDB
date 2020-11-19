@@ -1,37 +1,65 @@
 # from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
 from PySide2.QtCore import Qt,QModelIndex,QByteArray
 from PySide2.QtGui import (QImage,QPixmap)
-from PySide2.QtWidgets import (QCheckBox,QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
+from PySide2.QtWidgets import (QScrollArea,QCheckBox,QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
 # from PySide2.QtCharts import *
 # from PySide2 import *
 from PySide2.QtCore import Signal, Slot
 
 import Index
 
-
 class TagsCheckboxWindow(QWidget):
 	def __init__(self, path):
 		QWidget.__init__(self)
 		self.path = path
+		self.scroll_area = QScrollArea()
+		self.num_columns = 3
+		# self.checkboxes_widget = QWidget()
 
 		for paper in Index.gPapers:
 			if paper['path'] == self.path:
 				self.paper = paper
 
-		self.layout = QVBoxLayout()
+		self.columns = []
+		for i in range(self.num_columns):
+			layout = QVBoxLayout()
+			layout.setSpacing(0)
+			layout.setMargin(0)
+			self.columns.append(layout)
+
 		self.checkboxes = []
-		for tag in Index.gTags:
+		self.tags_copy = Index.gTags.copy()
+		self.tags_copy.sort(key=lambda s: s)
+
+		count = 0
+		for tag in self.tags_copy:
 			checkbox = QCheckBox(tag)
-			self.layout.addWidget(checkbox)
 			self.checkboxes.append(checkbox)
+			self.columns[int((self.num_columns*count)/len(self.tags_copy))].addWidget(checkbox) #add the checkbox to the appropriate column
 
 			if 'tags' in self.paper:
 				if tag in self.paper['tags']:
 					checkbox.setChecked(True)
 
 			checkbox.clicked.connect(self.checkbox_click_creator(checkbox))
+			count += 1
 
-		self.setLayout(self.layout)
+		# self.checkboxes_widget.setLayout(self.layout)
+		# self.scroll_area.setWidget(self.checkboxes_widget)
+
+		self.layout = QHBoxLayout()
+		for col in self.columns:
+			self.layout.addLayout(col)
+
+		self.scroll_area.setLayout(self.layout)
+		self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+		self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+		self.scroll_area.setWidgetResizable(True)
+
+		self.full_layout = QHBoxLayout()
+		self.full_layout.addWidget(self.scroll_area)
+
+		self.setLayout(self.full_layout)
 
 	def checkbox_click_creator(self, box):
 		@Slot()
