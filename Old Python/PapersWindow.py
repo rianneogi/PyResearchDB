@@ -10,15 +10,17 @@ import sys
 import random
 # import popplerqt5
 import subprocess
-from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
-from PyQt5.QtCore import Qt,QModelIndex,QByteArray
-from PyQt5.QtGui import (QImage,QPixmap)
-from PyQt5.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
+# from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
+from PySide2.QtCore import Qt,QModelIndex,QByteArray
+from PySide2.QtGui import (QImage,QPixmap)
+from PySide2.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
 # from PySide2.QtCharts import *
 # from PySide2 import *
+from PySide2.QtCore import Signal,Slot
 
 import Index
 import poppler
+from TagsCheckbox import TagsCheckboxWindow
 
 
 def getAuthorName(a):
@@ -147,8 +149,10 @@ class PapersTab(QWidget):
 		self.citations_button = QPushButton('Citations')
 		self.reindex_button = QPushButton('Reindex by Corpus ID')
 		self.add_paper_button = QPushButton('Add Publication by ID')
+		self.set_tags_button = QPushButton('Set Tags')
 
 		self.buttons = QHBoxLayout()
+		self.buttons.addWidget(self.set_tags_button)
 		self.buttons.addWidget(self.url_button)
 		# self.buttons.addWidget(self.scholar_button)
 		# self.buttons.addWidget(self.google_button)
@@ -176,6 +180,7 @@ class PapersTab(QWidget):
 		self.citations_button.clicked.connect(self.citations_button_click)
 		self.reindex_button.clicked.connect(self.reindex_button_click)
 		self.add_paper_button.clicked.connect(self.add_paper_button_click)
+		self.set_tags_button.clicked.connect(self.set_tags_button_click)
 
 		self.sort_by_title.clicked.connect(self.sort_by_title_click)
 		self.sort_by_author.clicked.connect(self.sort_by_author_click)
@@ -341,3 +346,10 @@ class PapersTab(QWidget):
 			# self.update_selected_paper_info()
 			self.PapersView = Index.gPapers.copy()
 			self.update()
+
+	@Slot()
+	def set_tags_button_click(self):
+		print('initiating tags window')
+		self.widget = TagsCheckboxWindow(self.PapersView[self.selected_paper_index]['path'])
+		self.widget.resize(800, 800)
+		self.widget.show()

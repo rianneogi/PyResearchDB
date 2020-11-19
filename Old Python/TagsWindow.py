@@ -1,7 +1,8 @@
-from PyQt5.QtCore import Qt,QModelIndex
-from PyQt5.QtGui import (QImage,QPixmap)
-from PyQt5.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
-from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
+from PySide2.QtCore import Qt,QModelIndex
+from PySide2.QtGui import (QImage,QPixmap)
+from PySide2.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
+# from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
+from PySide2.QtCore import Signal,Slot
 # from PySide2.QtCharts import *
 # from PySide2 import *
 import json

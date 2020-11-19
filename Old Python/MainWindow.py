@@ -9,16 +9,16 @@ import notify2
 import sys
 import random
 
-from PyQt5.QtCore import QByteArray
-from PyQt5.QtGui import QPixmap,QImage
-from PyQt5.QtWidgets import (QWidget,QTabWidget,QVBoxLayout,QApplication,QLabel,QHBoxLayout)
+# from PyQt5.QtCore import QByteArray
+# from PyQt5.QtGui import QPixmap,QImage
+# from PyQt5.QtWidgets import (QWidget,QTabWidget,QVBoxLayout,QApplication,QLabel,QHBoxLayout)
 # from PySide2.QtCharts import *
 # from PySide2 import *
 from PapersWindow import *
 from AuthorsWindow import *
 from TagsWindow import *
 import Index
-import popplerqt5
+# import popplerqt5
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
     app = QApplication([])
 
-    widget = TestPoppler()
+    widget = MainWindow()
     widget.resize(1600, 1000)
     widget.show()
 

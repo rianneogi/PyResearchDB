@@ -132,4 +132,6 @@ dmypy.json
 .vscode
 papers.json
 papers_backup.json
+tags.json
+tags_backup.json
 *.png
