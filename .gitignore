@@ -136,3 +136,4 @@ tags.json
 tags_backup.json
 *.png
 Old Python/tags.json
+*.out
