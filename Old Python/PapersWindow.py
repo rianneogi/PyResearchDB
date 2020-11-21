@@ -12,7 +12,7 @@ import random
 import subprocess
 # from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
 from PySide2.QtCore import Qt,QModelIndex,QByteArray
-from PySide2.QtGui import (QImage,QPixmap)
+from PySide2.QtGui import (QIcon,QImage,QPixmap)
 from PySide2.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
 # from PySide2.QtCharts import *
 # from PySide2 import *
@@ -158,9 +158,10 @@ class PapersTab(QWidget):
 		self.google_button = QPushButton('Google')
 		self.scholar_button = QPushButton('Scholar')
 		self.citations_button = QPushButton('Citations')
-		self.reindex_button = QPushButton('Reindex by Corpus ID')
-		self.add_paper_button = QPushButton('Add Publication by ID')
-		self.set_tags_button = QPushButton('Set Tags')
+		self.reindex_button = QPushButton('Reindex')
+		self.add_paper_button = QPushButton('Add Publication')
+		self.set_tags_button = QPushButton('Tags')
+		self.open_pdf_button = QPushButton('PDF')
 
 		self.buttons = QHBoxLayout()
 		self.buttons.addWidget(self.set_tags_button)
@@ -170,6 +171,7 @@ class PapersTab(QWidget):
 		# self.buttons.addWidget(self.citations_button)
 		self.buttons.addWidget(self.reindex_button)
 		self.buttons.addWidget(self.add_paper_button)
+		self.buttons.addWidget(self.open_pdf_button)
 
 		self.right.addLayout(self.buttons)
 		self.layout = QHBoxLayout()
@@ -192,6 +194,13 @@ class PapersTab(QWidget):
 		self.reindex_button.clicked.connect(self.reindex_button_click)
 		self.add_paper_button.clicked.connect(self.add_paper_button_click)
 		self.set_tags_button.clicked.connect(self.set_tags_button_click)
+		self.open_pdf_button.clicked.connect(self.open_pdf_button_click)
+
+		self.add_paper_button.setIcon(QIcon("Icons/add.svg"))
+		self.reindex_button.setIcon(QIcon("Icons/reindex.svg"))
+		self.url_button.setIcon(QIcon('Icons/link.svg'))
+		self.set_tags_button.setIcon(QIcon('Icons/tag.svg'))
+		self.open_pdf_button.setIcon(QIcon('Icons/openpdf.svg'))
 
 		self.sort_by_title.clicked.connect(self.sort_by_title_click)
 		self.sort_by_author.clicked.connect(self.sort_by_author_click)
@@ -367,3 +376,7 @@ class PapersTab(QWidget):
 		self.widget = TagsCheckboxWindow(self.PapersView[self.selected_paper_index]['path'])
 		self.widget.resize(800, 800)
 		self.widget.show()
+
+	@Slot()
+	def open_pdf_button_click(self):
+		subprocess.run(['xdg-open', self.PapersView[self.selected_paper_index]['path']], check=True)

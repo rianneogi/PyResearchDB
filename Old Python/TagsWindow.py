@@ -1,5 +1,5 @@
 from PySide2.QtCore import Qt,QModelIndex
-from PySide2.QtGui import (QImage,QPixmap)
+from PySide2.QtGui import (QIcon,QImage,QPixmap)
 from PySide2.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
 # from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
 from PySide2.QtCore import Signal,Slot
@@ -62,6 +62,7 @@ class TagsTab(QWidget):
 
 		self.add_tag_button = QPushButton('Add Tag')
 		self.add_tag_button.clicked.connect(self.add_tag_click)
+		self.add_tag_button.setIcon(QIcon("Icons/add.svg"))
 
 		self.tag_sorting = QHBoxLayout()
 		self.tag_sorting.addWidget(self.sort_by_tag_name)
