@@ -1,0 +1,12 @@
+load <file-name> : loads the given pdf file
+pages : returns the number of pages of loaded pdf
+page X : sets current page to X
+render : outputs pixel data of current page
+textlist : returns a JSON file of text data
+    a list of 'text data' types where each text data has:
+        'text' : string
+        'x' : x location of text
+        'y' : y location of text
+        'width' : width of bounding box of text
+        'height' : height of bounding box of text
+toc : outputs table of contents as a JSON file

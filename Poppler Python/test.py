@@ -4,6 +4,11 @@ from PyQt5.QtWidgets import (QWidget,QTabWidget,QVBoxLayout,QApplication,QLabel,
 import popplerqt5
 import sys
 
+def linear_interpolation(a, b, scale):
+	# print(scale)
+	assert(scale>=0 and scale<=1)
+	return a + (b-a)*scale
+
 class TestPoppler(QWidget):
 	def __init__(self):
 		QWidget.__init__(self)
@@ -17,24 +22,29 @@ class TestPoppler(QWidget):
 		self.image = QImage()
 
 		self.pdf = popplerqt5.Poppler.Document.load('1.pdf')
+		self.pdf.setRenderHint(popplerqt5.Poppler.Document.TextAntialiasing)
 		# popplerqt5.Poppler.Page()
 		self.page = self.pdf.page(0)
 		# self.renderer = popplerqt5.Poppler.PageRenderer()
-		self.image = self.page.renderToImage(125, 125, -1, -1, 1000, 1415)
+		page_size = self.page.pageSize()
+		self.image = self.page.renderToImage(3*72, 3*72, -1, -1, -1, -1)
 		bits = self.image.bits()
-		self.image.invertPixels()
+		# self.image.invertPixels()	
 		for x in range(self.image.width()):
 			for y in range(self.image.height()):
 				rgb = self.image.pixelColor(x, y)
 				# print(rgb.red(), rgb.blue(), rgb.green())
-				if rgb.red() == 0 and rgb.blue() == 0 and rgb.green() == 0:
-					rgb.setRed(68)
-					rgb.setGreen(68)
-					rgb.setBlue(68)
-				if rgb.red() == 255 and rgb.blue() == 255 and rgb.green() == 255:
-					rgb.setRed(234)
-					rgb.setGreen(234)
-					rgb.setBlue(234)
+				rgb.setRed(int(linear_interpolation(234, 68, rgb.red() / 255)))
+				rgb.setGreen(int(linear_interpolation(234, 68, rgb.green() / 255)))
+				rgb.setBlue(int(linear_interpolation(234, 68, rgb.blue() / 255)))
+				# if rgb.red() == 0 and rgb.blue() == 0 and rgb.green() == 0:
+				# 	rgb.setRed(68)
+				# 	rgb.setGreen(68)
+				# 	rgb.setBlue(68)
+				# if rgb.red() == 255 and rgb.blue() == 255 and rgb.green() == 255:
+				# 	rgb.setRed(234)
+				# 	rgb.setGreen(234)
+				# 	rgb.setBlue(234)
 				self.image.setPixelColor(x,y,rgb)
 		
 		# self.image.
@@ -52,7 +62,7 @@ class TestPoppler(QWidget):
 		# self.pixmap = QPixmap('pic.png')
 		self.pdf_image.setPixmap(self.pixmap)
 		# self.pdf_image.setScaledContents(True)
-		self.pdf_image.setFixedSize(1000, 1415)
+		# self.pdf_image.setFixedSize(page_size.width(), page_size.height())
 		self.pdf_image.show()
 		
 		self.layout = QHBoxLayout()
