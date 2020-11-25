@@ -103,11 +103,13 @@ class AuthorsTab(QWidget):
 		self.setLayout(self.layout)
 
 		self.author_table.selectionModel().currentRowChanged.connect(self.authors_row_changed)
-		self.pubs_table.cellClicked.connect(self.pubs_cell_double_click)
+		self.pubs_table.cellDoubleClicked.connect(self.pubs_cell_double_click)
 
 		self.sort_by_first_name.clicked.connect(self.sort_by_first_name_click)
 		self.sort_by_last_name.clicked.connect(self.sort_by_last_name_click)
 		self.sort_by_pubs.clicked.connect(self.sort_by_pubs_click)
+		self.sort_by_title.clicked.connect(self.sort_by_title_click)
+		self.sort_by_year.clicked.connect(self.sort_by_year_click)
 
 	def update_authors(self):
 		i = 0
@@ -194,7 +196,9 @@ class AuthorsTab(QWidget):
 	@Slot()
 	def sort_by_title_click(self):
 		self.pubs_per_author[self.selected_author_name].sort(key=PapersWindow.sortByTitle)
+		self.update_pubs()
 	
 	@Slot()
 	def sort_by_year_click(self):
 		self.pubs_per_author[self.selected_author_name].sort(key=PapersWindow.sortByYear)
+		self.update_pubs()

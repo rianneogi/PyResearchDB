@@ -88,10 +88,12 @@ class TagsTab(QWidget):
 		self.setLayout(self.layout)
 
 		self.tags_table.selectionModel().currentRowChanged.connect(self.tags_row_changed)
-		self.pubs_table.cellClicked.connect(self.pubs_cell_double_click)
+		self.pubs_table.cellDoubleClicked.connect(self.pubs_cell_double_click)
 
 		self.sort_by_tag_name.clicked.connect(self.sort_by_tag_click)
 		self.sort_by_num_pubs.clicked.connect(self.sort_by_pubs_click)
+		self.sort_by_title.clicked.connect(self.sort_by_title_click)
+		self.sort_by_year.clicked.connect(self.sort_by_year_click)
 
 		self.update_tags()
 
@@ -180,5 +182,15 @@ class TagsTab(QWidget):
 	def sort_by_pubs_click(self):
 		self.tags_metadata.sort(key=sortByPubs)
 		self.update_tags()
+
+	@Slot()
+	def sort_by_title_click(self):
+		self.tags_metadata[self.selected_tag_index]['papers'].sort(key=PapersWindow.sortByTitle)
+		self.update_pubs()
+	
+	@Slot()
+	def sort_by_year_click(self):
+		self.tags_metadata[self.selected_tag_index]['papers'].sort(key=PapersWindow.sortByYear)
+		self.update_pubs()
 
 	

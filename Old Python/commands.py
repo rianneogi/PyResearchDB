@@ -8,8 +8,8 @@ load_json(gJSONfilename)
 # for i in range(len(gPapers)):
 	# gPapers[i]['tags'] = []
 
-# index_dir('/home/rian/Documents/Research Papers/TCS/')
-remove_nonexistent_files()
+index_dir('/home/rian/Documents/Research Papers/TCS/')
+# remove_nonexistent_files()
 # index_with_semantic_scholar('/home/rian/Documents/Research Papers/Algorithms/')
 # reparse_files()
 # remove_dupes()
