@@ -21,7 +21,7 @@ class TestPoppler(QWidget):
 		# self.qimage = QImage()
 		self.image = QImage()
 
-		self.pdf = popplerqt5.Poppler.Document.load('1.pdf')
+		self.pdf = popplerqt5.Poppler.Document.load('2.pdf')
 		self.pdf.setRenderHint(popplerqt5.Poppler.Document.TextAntialiasing)
 		# popplerqt5.Poppler.Page()
 		self.page = self.pdf.page(0)

@@ -137,3 +137,6 @@ tags_backup.json
 *.png
 Old Python/tags.json
 *.out
+
+/Bin
+/Build

@@ -1,4 +1,4 @@
-load <file-name> : loads the given pdf file
+open <file-name> : loads the given pdf file
 pages : returns the number of pages of loaded pdf
 page X : sets current page to X
 render : outputs pixel data of current page
