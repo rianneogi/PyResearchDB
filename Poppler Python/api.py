@@ -56,7 +56,9 @@ def run_api():
 		if tokens[0] == 'render': #output pixel data to stdout
 			# image = page.renderToImage(3 * 72, 3 * 72, -1, -1, -1, -1)
 			image = renderer.render_page(page, 3 * 72, 3 * 72, -1, -1, -1, -1)
-			print(type(image.data))
+			# for i in range(len(image.data)):
+				# print(image.data[i])
+			# print(type(image.data))
 			print(image.data)
 
 			# if color_theme == 'dark':
