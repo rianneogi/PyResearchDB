@@ -8,6 +8,7 @@ load_json(gJSONfilename)
 # for i in range(len(gPapers)):
 	# gPapers[i]['tags'] = []
 
+# remove_unindexed_files()
 index_dir('/home/rian/Documents/Research Papers/TCS/')
 # remove_nonexistent_files()
 # index_with_semantic_scholar('/home/rian/Documents/Research Papers/Algorithms/')
@@ -15,7 +16,7 @@ index_dir('/home/rian/Documents/Research Papers/TCS/')
 # remove_dupes()
 # query_semantic_scholar('budgeted maximum coverage problem')
 # query_google_scholar('budgeted maximum coverage problem')
-# remove_unindexed_files()
+
 
 save_json(gJSONfilename)
 

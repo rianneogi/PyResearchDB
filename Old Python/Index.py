@@ -368,7 +368,8 @@ def add_paper_by_corpus_id(corpus_id):
 					if href.find('/'):
 						# print(href.rsplit('/', 1)[1]
 						path += href.rsplit('/', 1)[1]
-						if path[:-4] != '.pdf':
+						# print('last 4 chars of path: ', path[-4:])
+						if path[-4:] != '.pdf':
 							path += '.pdf'
 					else:
 						path += 'CorpusID:' + corpus_id+'.pdf'
