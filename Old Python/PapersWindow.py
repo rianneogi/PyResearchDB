@@ -19,7 +19,7 @@ from PySide2.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget
 from PySide2.QtCore import Signal,Slot
 
 import Index
-import poppler
+# import poppler
 from TagsCheckbox import TagsCheckboxWindow
 
 def getTagsString(tags):
@@ -289,20 +289,20 @@ class PapersTab(QWidget):
 		else:
 			self.paper_authors.setText('')
 
-		self.pdf = poppler.load_from_file(self.PapersView[row]['path'])
-		self.page = self.pdf.create_page(0)
-		self.renderer = poppler.PageRenderer()
-		self.image = self.renderer.render_page(self.page)
-		# print(image.data)
-		# print(image.memoryview().tolist())
+		# self.pdf = poppler.load_from_file(self.PapersView[row]['path'])
+		# self.page = self.pdf.create_page(0)
+		# self.renderer = poppler.PageRenderer()
+		# self.image = self.renderer.render_page(self.page)
+		# # print(image.data)
+		# # print(image.memoryview().tolist())
 
-		print(type(self.image.data))
-		self.bytearray.fromRawData(self.image.data)
-		# self.qimage = QImage()
-		self.qimage.loadFromData(self.bytearray)
-		self.pixmap.fromImage(self.qimage)
-		self.pdf_image.setPixmap(self.pixmap)
-		self.pdf_image.show()
+		# print(type(self.image.data))
+		# self.bytearray.fromRawData(self.image.data)
+		# # self.qimage = QImage()
+		# self.qimage.loadFromData(self.bytearray)
+		# self.pixmap.fromImage(self.qimage)
+		# self.pdf_image.setPixmap(self.pixmap)
+		# self.pdf_image.show()
 
 		print('set selected_paper_index', row)
 
