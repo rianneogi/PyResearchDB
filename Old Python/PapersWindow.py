@@ -373,7 +373,7 @@ class PapersTab(QWidget):
 	@Slot()
 	def set_tags_button_click(self):
 		print('initiating tags window')
-		self.widget = TagsCheckboxWindow(self.PapersView[self.selected_paper_index]['path'])
+		self.widget = TagsCheckboxWindow(self.PapersView[self.selected_paper_index]['path'], self)
 		self.widget.resize(800, 800)
 		self.widget.show()
 

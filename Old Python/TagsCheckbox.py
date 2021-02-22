@@ -9,11 +9,12 @@ from PySide2.QtCore import Signal, Slot
 import Index
 
 class TagsCheckboxWindow(QWidget):
-	def __init__(self, path):
+	def __init__(self, path, owner):
 		QWidget.__init__(self)
 		self.path = path
 		self.scroll_area = QScrollArea()
 		self.num_columns = 3
+		self.owner = owner
 		# self.checkboxes_widget = QWidget()
 
 		for paper in Index.gPapers:
@@ -65,12 +66,14 @@ class TagsCheckboxWindow(QWidget):
 		@Slot()
 		def checkbox_click():
 			if box.isChecked() == True:
-				print('checkbox for', self.path, 'is true')
+				# print('checkbox for', self.path, 'is true')
 				if 'tags' not in self.paper:
 					self.paper['tags'] = []
 				if box.text() not in self.paper['tags']:
 					self.paper['tags'].append(box.text())
 					Index.save_json(Index.gJSONfilename)
+					self.owner.PapersView = Index.gPapers.copy()
+					self.owner.update()
 				# for paper in Index.gPapers:
 				# 	if paper['path'] == self.path:
 				# 		if 'tags' not in paper:
@@ -89,6 +92,8 @@ class TagsCheckboxWindow(QWidget):
 				if box.text() in self.paper['tags']:
 					self.paper['tags'].remove(box.text())
 					Index.save_json(Index.gJSONfilename)
+					self.owner.PapersView = Index.gPapers.copy()
+					self.owner.update()
 				# for paper in Index.gPapers:
 				# 	if paper['path'] == self.path:
 				# 		if 'tags' not in paper:
