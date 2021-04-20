@@ -78,6 +78,11 @@ def sortByYear(json):
 		return json['date'][0]
 	return 0
 
+def sortByRecent(json):
+	if 'last-opened' in json:
+		return json['last-opened']
+	return 0
+
 class PapersTab(QWidget):
 	def __init__(self):
 		right_width = 400
@@ -116,11 +121,13 @@ class PapersTab(QWidget):
 		self.sort_by_title = QPushButton('Sort by Title')
 		self.sort_by_author = QPushButton('Sort by Authors')
 		self.sort_by_year = QPushButton('Sort by Year')
+		self.sort_by_recent = QPushButton('Sort by Recent')
 		
 		self.sorting = QHBoxLayout()
 		self.sorting.addWidget(self.sort_by_title)
 		self.sorting.addWidget(self.sort_by_author)
 		self.sorting.addWidget(self.sort_by_year)
+		self.sorting.addWidget(self.sort_by_recent)
 
 		self.paper_title = QLabel('')
 		self.paper_title.setFixedWidth(right_width)
@@ -205,6 +212,7 @@ class PapersTab(QWidget):
 		self.sort_by_title.clicked.connect(self.sort_by_title_click)
 		self.sort_by_author.clicked.connect(self.sort_by_author_click)
 		self.sort_by_year.clicked.connect(self.sort_by_year_click)
+		self.sort_by_recent.clicked.connect(self.sort_by_recent_click)
 
 	def update(self):
 		i = 0
@@ -260,6 +268,14 @@ class PapersTab(QWidget):
 	@Slot()
 	def cell_double_click(self, row, column):
 		subprocess.run(['xdg-open', self.PapersView[row]['path']], check=True)
+		for p in Index.gPapers:
+			if p['path'] == self.PapersView[row]['path']:
+				p['last-opened'] = time.time()
+				print('setting last opened time to ', p['last-opened'])
+		
+		Index.save_json(Index.gJSONfilename)
+		self.PapersView = Index.gPapers.copy()
+		self.update()
 
 	# @Slot()
 	# def cell_click(self, row, column):
@@ -304,7 +320,7 @@ class PapersTab(QWidget):
 		# self.pdf_image.setPixmap(self.pixmap)
 		# self.pdf_image.show()
 
-		print('set selected_paper_index', row)
+		# print('set selected_paper_index', row)
 
 	@Slot()
 	def row_changed(self, curr, prev):
@@ -325,6 +341,11 @@ class PapersTab(QWidget):
 	@Slot()
 	def sort_by_year_click(self):
 		self.PapersView.sort(key=sortByYear)
+		self.update()
+
+	@Slot()
+	def sort_by_recent_click(self):
+		self.PapersView.sort(key=sortByRecent, reverse=True)
 		self.update()
 
 	@Slot()
@@ -372,11 +393,11 @@ class PapersTab(QWidget):
 
 	@Slot()
 	def set_tags_button_click(self):
-		print('initiating tags window')
+		# print('initiating tags window')
 		self.widget = TagsCheckboxWindow(self.PapersView[self.selected_paper_index]['path'], self)
 		self.widget.resize(800, 800)
 		self.widget.show()
 
 	@Slot()
 	def open_pdf_button_click(self):
-		subprocess.run(['xdg-open', self.PapersView[self.selected_paper_index]['path']], check=True)
+		self.cell_double_click(self.selected_paper_index, 0)
