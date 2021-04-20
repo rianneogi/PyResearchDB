@@ -77,6 +77,9 @@ class AuthorsTab(QWidget):
 		self.sort_by_pubs = QPushButton('Sort by Publications')
 		self.sort_by_title = QPushButton('Sort by Title')
 		self.sort_by_year = QPushButton('Sort by Year')
+		self.sort_by_recent = QPushButton('Sort by Recent')
+		self.current_author_sort = 'default'
+		self.current_pub_sort = 'default'
 
 		self.author_sorting = QHBoxLayout()
 		self.author_sorting.addWidget(self.sort_by_first_name)
@@ -86,6 +89,7 @@ class AuthorsTab(QWidget):
 		self.pubs_sorting = QHBoxLayout()
 		self.pubs_sorting.addWidget(self.sort_by_title)
 		self.pubs_sorting.addWidget(self.sort_by_year)
+		self.pubs_sorting.addWidget(self.sort_by_recent)
 
 		self.sorting = QHBoxLayout()
 		self.sorting.addLayout(self.author_sorting)
@@ -110,6 +114,7 @@ class AuthorsTab(QWidget):
 		self.sort_by_pubs.clicked.connect(self.sort_by_pubs_click)
 		self.sort_by_title.clicked.connect(self.sort_by_title_click)
 		self.sort_by_year.clicked.connect(self.sort_by_year_click)
+		self.sort_by_recent.clicked.connect(self.sort_by_recent_click)
 
 	def update_authors(self):
 		i = 0
@@ -169,6 +174,7 @@ class AuthorsTab(QWidget):
 		row = curr.row()
 		self.selected_author_index = row
 		self.selected_author_name = self.authors[row]['name']
+		self.sort()
 		self.update_pubs()
 		
 		print('set selected_author_index', row)
@@ -179,27 +185,86 @@ class AuthorsTab(QWidget):
 		# subprocess.run(['xdg-open', self.pubs_per_author[self.selected_author_name][row]['path']], check=True)
 		Index.open_paper(self.pubs_per_author[self.selected_author_name][row]['path'])
 
+	def sort(self):
+		if self.current_author_sort == 'name':
+			self.authors.sort(key=sortByFirstName)
+		if self.current_author_sort == 'name_rev':
+			self.authors.sort(key=sortByFirstName, reverse=True)
+			print('reverse sor tbyname')
+		if self.current_author_sort == 'pubs':
+			self.authors.sort(key=sortByPubs, reverse=True)
+		if self.current_author_sort == 'pubs_rev':
+			self.authors.sort(key=sortByPubs)
+
+		if self.current_pub_sort == 'title':
+			self.pubs_per_author[self.selected_author_name].sort(key=PapersWindow.sortByTitle)
+		if self.current_pub_sort == 'title_rev':
+			self.pubs_per_author[self.selected_author_name].sort(key=PapersWindow.sortByTitle, reverse=True)
+		if self.current_pub_sort == 'year':
+			self.pubs_per_author[self.selected_author_name].sort(key=PapersWindow.sortByYear)
+		if self.current_pub_sort == 'year_rev':
+			self.pubs_per_author[self.selected_author_name].sort(key=PapersWindow.sortByYear, reverse=True)
+		if self.current_pub_sort == 'recent':
+			self.pubs_per_author[self.selected_author_name].sort(key=PapersWindow.sortByRecent, reverse=True)
+		if self.current_pub_sort == 'recent_rev':
+			self.pubs_per_author[self.selected_author_name].sort(key=PapersWindow.sortByRecent)
+
 	@Slot()
 	def sort_by_first_name_click(self):
-		self.authors.sort(key=sortByFirstName)
+		if self.current_author_sort == 'name':
+			self.current_author_sort = 'name_rev'
+		else:
+			self.current_author_sort = 'name'
+		self.sort()
 		self.update_authors()
+		self.update_pubs()
 
 	@Slot()
 	def sort_by_last_name_click(self):
-		self.authors.sort(key=sortByLastName)
+		if self.current_author_sort == 'name':
+			self.current_author_sort = 'name_rev'
+		else:
+			self.current_author_sort = 'name'
+		self.sort()
 		self.update_authors()
+		self.update_pubs()
 
 	@Slot()
 	def sort_by_pubs_click(self):
-		self.authors.sort(key=sortByPubs)
+		if self.current_author_sort == 'pubs':
+			self.current_author_sort = 'pubs_rev'
+		else:
+			self.current_author_sort = 'pubs'
+		self.sort()
 		self.update_authors()
+		self.update_pubs()
 
 	@Slot()
 	def sort_by_title_click(self):
-		self.pubs_per_author[self.selected_author_name].sort(key=PapersWindow.sortByTitle)
+		if self.current_pub_sort == 'title':
+			self.current_pub_sort = 'title_rev'
+		else:
+			self.current_pub_sort = 'title'
+		self.sort()
+		self.update_authors()
 		self.update_pubs()
 	
 	@Slot()
 	def sort_by_year_click(self):
-		self.pubs_per_author[self.selected_author_name].sort(key=PapersWindow.sortByYear)
+		if self.current_pub_sort == 'year':
+			self.current_pub_sort = 'year_rev'
+		else:
+			self.current_pub_sort = 'year'
+		self.sort()
+		self.update_authors()
+		self.update_pubs()
+
+	@Slot()
+	def sort_by_recent_click(self):
+		if self.current_pub_sort == 'recent':
+			self.current_pub_sort = 'recent_rev'
+		else:
+			self.current_pub_sort = 'recent'
+		self.sort()
+		self.update_authors()
 		self.update_pubs()

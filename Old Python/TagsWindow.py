@@ -59,6 +59,9 @@ class TagsTab(QWidget):
 		self.sort_by_title = QPushButton('Sort by Title')
 		self.sort_by_author = QPushButton('Sort by Authors')
 		self.sort_by_year = QPushButton('Sort by Year')
+		self.sort_by_recent = QPushButton('Sort by Recent')
+		self.current_tag_sort = 'default'
+		self.current_pub_sort = 'default'
 
 		self.add_tag_button = QPushButton('Add Tag')
 		self.add_tag_button.clicked.connect(self.add_tag_click)
@@ -71,6 +74,7 @@ class TagsTab(QWidget):
 		self.pubs_sorting = QHBoxLayout()
 		self.pubs_sorting.addWidget(self.sort_by_title)
 		self.pubs_sorting.addWidget(self.sort_by_year)
+		self.pubs_sorting.addWidget(self.sort_by_recent)
 
 		self.tags = QVBoxLayout()
 		self.tags.addLayout(self.tag_sorting)
@@ -94,6 +98,7 @@ class TagsTab(QWidget):
 		self.sort_by_num_pubs.clicked.connect(self.sort_by_pubs_click)
 		self.sort_by_title.clicked.connect(self.sort_by_title_click)
 		self.sort_by_year.clicked.connect(self.sort_by_year_click)
+		self.sort_by_recent.clicked.connect(self.sort_by_recent_click)
 
 		self.update_tags()
 
@@ -158,6 +163,7 @@ class TagsTab(QWidget):
 		row = curr.row()
 		self.selected_tag_index = row
 		self.selected_tag_name = self.tags_metadata[row]['name']
+		self.sort()
 		self.update_pubs()
 		
 		print('set selected_tag_index', row)
@@ -174,24 +180,77 @@ class TagsTab(QWidget):
 			self.update_tags()
 			self.save_tags()
 
+	def sort(self):
+		if self.current_tag_sort == 'tag':
+			self.tags_metadata.sort(key=sortByTags)
+		if self.current_tag_sort == 'tag_rev':
+			self.tags_metadata.sort(key=sortByTags, reverse=True)
+		if self.current_tag_sort == 'pubs':
+			self.tags_metadata.sort(key=sortByPubs, reverse=True)
+		if self.current_tag_sort == 'pubs_rev':
+			self.tags_metadata.sort(key=sortByPubs)
+
+		if self.current_pub_sort == 'title':
+			self.tags_metadata[self.selected_tag_index]['papers'].sort(key=PapersWindow.sortByTitle)
+		if self.current_pub_sort == 'title_rev':
+			self.tags_metadata[self.selected_tag_index]['papers'].sort(key=PapersWindow.sortByTitle, reverse=True)
+		if self.current_pub_sort == 'year':
+			self.tags_metadata[self.selected_tag_index]['papers'].sort(key=PapersWindow.sortByYear)
+		if self.current_pub_sort == 'year_rev':
+			self.tags_metadata[self.selected_tag_index]['papers'].sort(key=PapersWindow.sortByYear, reverse=True)
+		if self.current_pub_sort == 'recent':
+			self.tags_metadata[self.selected_tag_index]['papers'].sort(key=PapersWindow.sortByRecent, reverse=True)
+		if self.current_pub_sort == 'recent_rev':
+			self.tags_metadata[self.selected_tag_index]['papers'].sort(key=PapersWindow.sortByRecent)
+
 	@Slot()
 	def sort_by_tag_click(self):
-		self.tags_metadata.sort(key=sortByTags)
+		if self.current_tag_sort == 'tag':
+			self.current_tag_sort = 'tag_rev'
+		else:
+			self.current_tag_sort = 'tag'
+		self.sort()
 		self.update_tags()
+		self.update_pubs()
 
 	@Slot()
 	def sort_by_pubs_click(self):
-		self.tags_metadata.sort(key=sortByPubs)
+		if self.current_tag_sort == 'pubs':
+			self.current_tag_sort = 'pubs_rev'
+		else:
+			self.current_tag_sort = 'pubs'
+		self.sort()
 		self.update_tags()
+		self.update_pubs()
 
 	@Slot()
 	def sort_by_title_click(self):
-		self.tags_metadata[self.selected_tag_index]['papers'].sort(key=PapersWindow.sortByTitle)
+		if self.current_pub_sort == 'title':
+			self.current_pub_sort = 'title_rev'
+		else:
+			self.current_pub_sort = 'title'
+		self.sort()
+		self.update_tags()
 		self.update_pubs()
 	
 	@Slot()
 	def sort_by_year_click(self):
-		self.tags_metadata[self.selected_tag_index]['papers'].sort(key=PapersWindow.sortByYear)
+		if self.current_pub_sort == 'year':
+			self.current_pub_sort = 'year_rev'
+		else:
+			self.current_pub_sort = 'year'
+		self.sort()
+		self.update_tags()
+		self.update_pubs()
+
+	@Slot()
+	def sort_by_recent_click(self):
+		if self.current_pub_sort == 'recent':
+			self.current_pub_sort = 'recent_rev'
+		else:
+			self.current_pub_sort = 'recent'
+		self.sort()
+		self.update_tags()
 		self.update_pubs()
 
 	
