@@ -150,7 +150,8 @@ class TagsTab(QWidget):
 	
 	@Slot()
 	def pubs_cell_double_click(self, row, column):
-		subprocess.run(['xdg-open', self.tags_metadata[self.selected_tag_index]['papers'][row]['path']], check=True)
+		# subprocess.run(['xdg-open', self.tags_metadata[self.selected_tag_index]['papers'][row]['path']], check=True)
+		Index.open_paper(self.tags_metadata[self.selected_tag_index]['papers'][row]['path'])
 
 	@Slot()
 	def tags_row_changed(self, curr, prev):

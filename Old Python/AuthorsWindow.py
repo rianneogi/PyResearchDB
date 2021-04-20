@@ -176,7 +176,8 @@ class AuthorsTab(QWidget):
 
 	@Slot()
 	def pubs_cell_double_click(self, row, column):
-		subprocess.run(['xdg-open', self.pubs_per_author[self.selected_author_name][row]['path']], check=True)
+		# subprocess.run(['xdg-open', self.pubs_per_author[self.selected_author_name][row]['path']], check=True)
+		Index.open_paper(self.pubs_per_author[self.selected_author_name][row]['path'])
 
 	@Slot()
 	def sort_by_first_name_click(self):

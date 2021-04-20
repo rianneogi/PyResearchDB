@@ -291,13 +291,7 @@ class PapersTab(QWidget):
 
 	@Slot()
 	def cell_double_click(self, row, column):
-		subprocess.run(['xdg-open', self.PapersView[row]['path']], check=True)
-		for p in Index.gPapers:
-			if p['path'] == self.PapersView[row]['path']:
-				p['last-opened'] = time.time()
-				print('setting last opened time to ', p['last-opened'])
-		
-		Index.save_json(Index.gJSONfilename)
+		Index.open_paper(self.PapersView[row]['path'])
 		# self.PapersView = Index.gPapers.copy()
 		# self.update()
 		self.copy_sort_update()

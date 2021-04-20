@@ -433,3 +433,13 @@ def remove_nonexistent_files():
 		if not os.path.isfile(paper['path']):
 			print('removing ', paper['path'], ':', paper['title'])
 			gPapers.remove(paper)
+
+
+def open_paper(path):
+	subprocess.run(['xdg-open', path], check=True)
+	for p in gPapers:
+		if p['path'] == path:
+			p['last-opened'] = time.time()
+			print('setting last opened time to ', p['last-opened'])
+		
+	save_json(gJSONfilename)
