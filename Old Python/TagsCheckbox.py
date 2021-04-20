@@ -72,8 +72,9 @@ class TagsCheckboxWindow(QWidget):
 				if box.text() not in self.paper['tags']:
 					self.paper['tags'].append(box.text())
 					Index.save_json(Index.gJSONfilename)
-					self.owner.PapersView = Index.gPapers.copy()
-					self.owner.update()
+					# self.owner.PapersView = Index.gPapers.copy()
+					# self.owner.update()
+					self.owner.copy_sort_update()
 				# for paper in Index.gPapers:
 				# 	if paper['path'] == self.path:
 				# 		if 'tags' not in paper:
@@ -92,8 +93,9 @@ class TagsCheckboxWindow(QWidget):
 				if box.text() in self.paper['tags']:
 					self.paper['tags'].remove(box.text())
 					Index.save_json(Index.gJSONfilename)
-					self.owner.PapersView = Index.gPapers.copy()
-					self.owner.update()
+					# self.owner.PapersView = Index.gPapers.copy()
+					# self.owner.update()
+					self.owner.copy_sort_update()
 				# for paper in Index.gPapers:
 				# 	if paper['path'] == self.path:
 				# 		if 'tags' not in paper:

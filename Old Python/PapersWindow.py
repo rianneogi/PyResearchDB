@@ -122,6 +122,7 @@ class PapersTab(QWidget):
 		self.sort_by_author = QPushButton('Sort by Authors')
 		self.sort_by_year = QPushButton('Sort by Year')
 		self.sort_by_recent = QPushButton('Sort by Recent')
+		self.current_sort = 'default'
 		
 		self.sorting = QHBoxLayout()
 		self.sorting.addWidget(self.sort_by_title)
@@ -263,7 +264,30 @@ class PapersTab(QWidget):
 			item6.setText(abstract)
 			item6.setFlags(Qt.ItemIsEnabled)
 			
-			i+=1
+			i += 1
+
+	def sort(self):
+		if self.current_sort == 'title':
+			self.PapersView.sort(key=sortByTitle)
+		if self.current_sort == 'title_rev':
+			self.PapersView.sort(key=sortByTitle, reverse=True)
+		if self.current_sort == 'author':
+			self.PapersView.sort(key=sortByAuthor)
+		if self.current_sort == 'author_rev':
+			self.PapersView.sort(key=sortByAuthor, reverse=True)
+		if self.current_sort == 'year':
+			self.PapersView.sort(key=sortByYear)
+		if self.current_sort == 'year_rev':
+			self.PapersView.sort(key=sortByYear, reverse=True)
+		if self.current_sort == 'recent':
+			self.PapersView.sort(key=sortByRecent, reverse=True)
+		if self.current_sort == 'recent_rev':
+			self.PapersView.sort(key=sortByRecent)
+			
+	def copy_sort_update(self):
+		self.PapersView = Index.gPapers.copy()
+		self.sort()
+		self.update()
 
 	@Slot()
 	def cell_double_click(self, row, column):
@@ -274,8 +298,9 @@ class PapersTab(QWidget):
 				print('setting last opened time to ', p['last-opened'])
 		
 		Index.save_json(Index.gJSONfilename)
-		self.PapersView = Index.gPapers.copy()
-		self.update()
+		# self.PapersView = Index.gPapers.copy()
+		# self.update()
+		self.copy_sort_update()
 
 	# @Slot()
 	# def cell_click(self, row, column):
@@ -330,23 +355,39 @@ class PapersTab(QWidget):
 
 	@Slot()
 	def sort_by_title_click(self):
-		self.PapersView.sort(key=sortByTitle)
-		self.update()
+		if self.current_sort == 'title':
+			self.current_sort = 'title_rev'
+		else:
+			self.current_sort = 'title'
+
+		self.copy_sort_update()
 
 	@Slot()
 	def sort_by_author_click(self):
-		self.PapersView.sort(key=sortByAuthor)
-		self.update()
+		if self.current_sort == 'author':
+			self.current_sort = 'author_rev'
+		else:
+			self.current_sort = 'author'
+
+		self.copy_sort_update()
 
 	@Slot()
 	def sort_by_year_click(self):
-		self.PapersView.sort(key=sortByYear)
-		self.update()
+		if self.current_sort == 'year':
+			self.current_sort = 'year_rev'
+		else:
+			self.current_sort = 'year'
+
+		self.copy_sort_update()
 
 	@Slot()
 	def sort_by_recent_click(self):
-		self.PapersView.sort(key=sortByRecent, reverse=True)
-		self.update()
+		if self.current_sort == 'recent':
+			self.current_sort = 'recent_rev'
+		else:
+			self.current_sort = 'recent'
+
+		self.copy_sort_update()
 
 	@Slot()
 	def url_button_click(self):
@@ -377,8 +418,9 @@ class PapersTab(QWidget):
 			# self.row_changed(self.selected_paper_index,0)
 			self.update_selected_paper_info()
 			Index.save_json(Index.gJSONfilename)
-			self.PapersView = Index.gPapers.copy()
-			self.update()
+			# self.PapersView = Index.gPapers.copy()
+			# self.update()
+			self.copy_sort_update()
 
 	@Slot()
 	def add_paper_button_click(self):
@@ -388,8 +430,9 @@ class PapersTab(QWidget):
 		if ok and text:
 			Index.add_paper_by_corpus_id(text)
 			# self.update_selected_paper_info()
-			self.PapersView = Index.gPapers.copy()
-			self.update()
+			# self.PapersView = Index.gPapers.copy()
+			# self.update()
+			self.copy_sort_update()
 
 	@Slot()
 	def set_tags_button_click(self):
