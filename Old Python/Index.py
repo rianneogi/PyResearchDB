@@ -390,7 +390,8 @@ def add_paper_by_corpus_id(corpus_id):
 			json['path'] = path
 			json['tags'] = []
 			gPapers.append(json)
-			subprocess.run(['xdg-open', json['path']], check=True) #open the paper
+			# subprocess.run(['xdg-open', json['path']], check=True) #open the paper
+			open_paper(json['path'])
 			n = notify2.Notification("Document Parsed", json['title'], "package-install")  #send notification
 			n.show()
 			save_json(gJSONfilename) #save json
