@@ -13,10 +13,11 @@ import subprocess
 # from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
 from PySide2.QtCore import Qt,QModelIndex,QByteArray
 from PySide2.QtGui import (QIcon,QImage,QPixmap)
-from PySide2.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction)
+from PySide2.QtWidgets import (QLineEdit,QInputDialog,QPushButton,QLabel,QWidget,QTableWidget,QTabWidget,QVBoxLayout,QHBoxLayout,QApplication,QTableWidgetItem,QAbstractItemView,QAction,QCheckBox)
 # from PySide2.QtCharts import *
 # from PySide2 import *
 from PySide2.QtCore import Signal,Slot
+from fuzzywuzzy import fuzz
 
 import Index
 # import poppler
@@ -123,12 +124,24 @@ class PapersTab(QWidget):
 		self.sort_by_year = QPushButton('Sort by Year')
 		self.sort_by_recent = QPushButton('Sort by Recent')
 		self.current_sort = 'default'
-		
+
 		self.sorting = QHBoxLayout()
 		self.sorting.addWidget(self.sort_by_title)
 		self.sorting.addWidget(self.sort_by_author)
 		self.sorting.addWidget(self.sort_by_year)
 		self.sorting.addWidget(self.sort_by_recent)
+		
+		self.searchbox = QLineEdit()
+		self.searchbox.setFixedWidth(right_width-40-128)
+		self.searchtext = QLabel('Search:')
+		self.searchtext.setFixedWidth(40)
+		# self.searchtext.setMargin(0)
+		self.searchabstract = QCheckBox('Search Abstracts')
+		self.searchabstract.setFixedWidth(128)
+		self.searchlayout = QHBoxLayout()
+		self.searchlayout.addWidget(self.searchtext)
+		self.searchlayout.addWidget(self.searchbox)
+		self.searchlayout.addWidget(self.searchabstract)
 
 		self.paper_title = QLabel('')
 		self.paper_title.setFixedWidth(right_width)
@@ -155,6 +168,7 @@ class PapersTab(QWidget):
 
 		self.right = QVBoxLayout()
 		self.right.addLayout(self.sorting)
+		self.right.addLayout(self.searchlayout)
 		self.right.addWidget(self.paper_title)
 		self.right.addWidget(self.paper_authors)
 		self.right.addWidget(self.paper_tags)
@@ -214,6 +228,9 @@ class PapersTab(QWidget):
 		self.sort_by_author.clicked.connect(self.sort_by_author_click)
 		self.sort_by_year.clicked.connect(self.sort_by_year_click)
 		self.sort_by_recent.clicked.connect(self.sort_by_recent_click)
+
+		self.searchbox.textChanged.connect(self.searchbox_text_changed)
+		self.searchabstract.clicked.connect(self.searchabstract_checked)
 
 	def update(self):
 		i = 0
@@ -283,11 +300,22 @@ class PapersTab(QWidget):
 			self.PapersView.sort(key=sortByRecent, reverse=True)
 		if self.current_sort == 'recent_rev':
 			self.PapersView.sort(key=sortByRecent)
+		if self.current_sort == 'fuzzy_search':
+			self.PapersView.sort(key=self.sortByFuzzySearch)
 			
 	def copy_sort_update(self):
 		self.PapersView = Index.gPapers.copy()
 		self.sort()
 		self.update()
+
+	def sortByFuzzySearch(self, json):
+		search_string = getAuthorString(json['authors']) + json['title']
+		if 'tags' in json:
+			search_string += getTagsString(json['tags'])
+		if self.searchabstract.isChecked() and 'abstract' in json and json['abstract']!=None:
+			search_string += json['abstract']
+		
+		return -fuzz.token_set_ratio(search_string, self.searchbox.text())
 
 	@Slot()
 	def cell_double_click(self, row, column):
@@ -340,6 +368,11 @@ class PapersTab(QWidget):
 		# self.pdf_image.show()
 
 		# print('set selected_paper_index', row)
+
+	@Slot()
+	def searchbox_text_changed(self, text):
+		self.current_sort = 'fuzzy_search'
+		self.copy_sort_update()
 
 	@Slot()
 	def row_changed(self, curr, prev):
@@ -438,3 +471,7 @@ class PapersTab(QWidget):
 	@Slot()
 	def open_pdf_button_click(self):
 		self.cell_double_click(self.selected_paper_index, 0)
+
+	@Slot()
+	def searchabstract_checked(self):
+		self.copy_sort_update()
