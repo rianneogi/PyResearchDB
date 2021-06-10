@@ -274,7 +274,7 @@ def index_dir(path):
 	count = 0
 	file_length = len(files)
 	for f in files:
-		if f.endswith('.pdf'):
+		if f.endswith('.pdf') or f.endswith('.ps'):
 			index_file(path + f, f)
 		count += 1
 		print("Indexed " + str(count) + "/" + str(file_length))
@@ -303,7 +303,10 @@ def reindex_file_by_corpus_id(path, corpus_id):
 
 
 def index_file_with_semantic_scholar(path, title):
-	title = title[:-4]  #remove .pdf
+	if path.endswith('.pdf'): #remove .pdf or .ps
+		title = title[:-4]  
+	if path.endswith('.ps'):
+		title = title[:-3]
 	print("querying:", title)
 	json = query_semantic_scholar(title)
 	json['path'] = path
